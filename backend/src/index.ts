@@ -1,12 +1,12 @@
-import express from 'express';
+import Server from './server';
 
-const app = express();
-const port = process.env.PORT || 3000;
+class JwtApplication {
+  public run(): void {
+    const server = new Server();
 
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello TypeScript!' });
-});
+    server.start();
+  }
+}
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+const jwtApplication: JwtApplication = new JwtApplication();
+jwtApplication.run();
