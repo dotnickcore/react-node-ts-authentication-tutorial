@@ -1,5 +1,7 @@
 class AuthService {
-  public async signUp(requestBody: any) {}
+  public async signUp(requestBody: any) {
+    console.log(requestBody);
+  }
 
   public async signIn(requestBody: any) {}
 }

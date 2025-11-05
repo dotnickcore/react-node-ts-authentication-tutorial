@@ -48,7 +48,7 @@ class Server {
   }
 
   private listenServer() {
-    const port = process.env.PORT || 5050;
+    const port = process.env.PORT || 3000;
 
     this.app.listen(port, () => {
       console.log(`Connected to server with port ${port}`);

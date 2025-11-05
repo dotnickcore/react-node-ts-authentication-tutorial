@@ -1,5 +1,5 @@
 import { Application } from 'express';
-import authRoute from './authRoutes';
+import authRoute from './auth/authRoutes';
 
 function appRoutes(app: Application) {
   app.use('/api/v1/auth', authRoute);
