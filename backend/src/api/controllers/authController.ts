@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { authService } from '../../services/authService';
 
+
 class AuthController {
   public async signUp(req: Request, res: Response) {
-    await authService.signUp('abc');
+    await authService.signUp(req);
   }
-
+  
   public async signIn(req: Request, res: Response) {}
 
   public async getCurrentUser(req: Request, res: Response) {}
