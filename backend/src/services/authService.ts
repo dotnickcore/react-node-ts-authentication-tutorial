@@ -1,12 +1,13 @@
+import { CreateAuthUserDto } from "../models/users/CreateAuthUserDto";
 import { AuthRepository } from "../respositories/authRepository";
 import { IAuthRepository } from "../types/IAuthRepository";
 
 class AuthService {
   constructor(private authRepository: IAuthRepository) {}
 
-  public async signUp(requestBody: any) {
-    console.log('Service: Creating user with data:', requestBody);
-    return await this.authRepository.create(requestBody);
+  public async signUp(newUser: CreateAuthUserDto) {
+
+    return await this.authRepository.create(newUser);
   }
 
   public async signIn(requestBody: any) {}
