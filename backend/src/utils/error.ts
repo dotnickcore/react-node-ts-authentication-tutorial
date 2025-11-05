@@ -1,4 +1,4 @@
-import HTTP_STATUS from '../constants/http.constant';
+import HTTP_STATUS from '../constants/httpConstants';
 
 export abstract class CustomError extends Error {
   abstract status: string;

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi, { Schema } from 'joi';
-import HTTP_STATUS from '../constants/http.constant';
+import HTTP_STATUS from '../../constants/httpConstants';
 
 function formatErrorMessage(error: Joi.ValidationError) {
   return error.details.map((item: any) => item.message);
@@ -13,7 +13,7 @@ export function validateSchema(schema: Schema) {
     if (error) {
       return res.status(HTTP_STATUS.BAD_REQUEST).json({
         message: 'Validation Error',
-        error: formatErrorMessage(error)
+        error: formatErrorMessage(error),
       });
     }
 

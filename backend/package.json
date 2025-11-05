@@ -30,6 +30,7 @@
     "@types/express": "^5.0.5",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.9.2",
+    "@types/pg": "^8.15.6",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
     "eslint": "^9.39.0",
@@ -45,10 +46,12 @@
     "typescript-eslint": "^8.46.2"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "joi": "^18.0.1",
-    "parser": "^0.1.4"
+    "parser": "^0.1.4",
+    "pg": "^8.16.3"
   }
 }

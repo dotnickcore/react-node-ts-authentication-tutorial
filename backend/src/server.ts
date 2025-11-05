@@ -1,9 +1,9 @@
 import express, { Application, NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
-import HTTP_STATUS from './globals/constants/http.constant';
-import { CustomError, NotFoundException } from './globals/cores/error.core';
-import appRoutes from './globals/routes/appRoutes';
+import HTTP_STATUS from './constants/httpConstants';
+import { CustomError, NotFoundException } from './utils/error';
+import appRoutes from './api/routes/appRoutes';
 class Server {
   private app: Application;
 
@@ -37,12 +37,12 @@ class Server {
       console.log('check error', error);
       if (error instanceof CustomError) {
         return res.status(error.statusCode).json({
-          message: error.message
+          message: error.message,
         });
       }
 
       return res.status(HTTP_STATUS.INTERNAL_SERVER).json({
-        message: 'Something went wrong!'
+        message: 'Something went wrong!',
       });
     });
   }
