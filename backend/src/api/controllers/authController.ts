@@ -1,18 +1,20 @@
 import { Request, Response } from 'express';
 import { authService } from '../../services/authService';
 import { CreateAuthUserDto } from '../../models/users/CreateAuthUserDto';
+import bcrypt from 'bcrypt';
 
 class AuthController {
   public async signUp(req: Request, res: Response) {
-    
-    
-    const newUser: CreateAuthUserDto = {
-      given_name: "Nicholas",
-      surname: "Browning",
-      email: "nicholas.browning@gmail.com",
-      password: "12345678",
-    }
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
+    const newUser: CreateAuthUserDto = {
+      given_name: req.body.given_name,
+      surname: req.body.surname,
+      email: req.body.email,
+      password: hashedPassword
+    }
+    
     await authService.signUp(newUser);
   }
   

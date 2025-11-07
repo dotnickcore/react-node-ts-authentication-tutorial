@@ -1,3 +1,4 @@
+import { AuthUser } from "../models/users/AuthUser";
 import { CreateAuthUserDto } from "../models/users/CreateAuthUserDto";
 import { AuthRepository } from "../respositories/authRepository";
 import { IAuthRepository } from "../types/IAuthRepository";
@@ -6,8 +7,21 @@ class AuthService {
   constructor(private authRepository: IAuthRepository) {}
 
   public async signUp(newUser: CreateAuthUserDto) {
+    const email = await this.authRepository.doesEmailExist(newUser.email);
 
-    return await this.authRepository.create(newUser);
+    if (email) console.log("email found")
+
+    const newAuthUser: AuthUser = {
+      id: "",
+      given_name: newUser.given_name,
+      surname: newUser.surname,
+      email: newUser.email,
+      password_hash: newUser.password,
+      created_at: new Date(),
+      updated_at: new Date()
+    }
+
+    return await this.authRepository.create(newAuthUser);
   }
 
   public async signIn(requestBody: any) {}
