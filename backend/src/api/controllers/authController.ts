@@ -12,7 +12,13 @@ class AuthController {
       password: await HashAuthUserPassword(req.body.password)
     }
     
-    await authService.signUp(newUser);
+    const user = await authService.signUp(newUser);
+
+    res.status(201).json({
+      success: true,
+      message: 'User created successfully',
+      data: user,
+    });
   }
   
   public async signIn(req: Request, res: Response) {}
