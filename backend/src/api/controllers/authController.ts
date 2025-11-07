@@ -4,6 +4,8 @@ import { CreateAuthUserDto } from '../../models/users/CreateAuthUserDto';
 
 class AuthController {
   public async signUp(req: Request, res: Response) {
+    
+    
     const newUser: CreateAuthUserDto = {
       given_name: "Nicholas",
       surname: "Browning",
