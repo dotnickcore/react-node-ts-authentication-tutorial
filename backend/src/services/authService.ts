@@ -7,10 +7,6 @@ class AuthService {
   constructor(private authRepository: IAuthRepository) {}
 
   public async signUp(newUser: CreateAuthUserDto) {
-    const email = await this.authRepository.doesEmailExist(newUser.email);
-
-    if (email) console.log("email found")
-
     const newAuthUser: AuthUser = {
       id: "",
       given_name: newUser.given_name,
@@ -22,6 +18,10 @@ class AuthService {
     }
 
     return await this.authRepository.create(newAuthUser);
+  }
+
+  public async doesEmailExist(email: string) {
+    return await this.authRepository.doesEmailExist(email);
   }
 
   public async signIn(requestBody: any) {}

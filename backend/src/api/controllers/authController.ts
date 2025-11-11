@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { authService } from '../../services/authService';
 import { CreateAuthUserDto } from '../../models/users/CreateAuthUserDto';
 import { HashAuthUserPassword } from '../../utils/hashAuthUserPassword';
+import { userCreateSchema } from '../../validators/userValidator';
 
 class AuthController {
   public async signUp(req: Request, res: Response) {
@@ -9,18 +10,36 @@ class AuthController {
       given_name: req.body.given_name,
       surname: req.body.surname,
       email: req.body.email,
-      password: await HashAuthUserPassword(req.body.password)
+      password: await HashAuthUserPassword(req.body.password),
+    };
+
+    const email = await authService.doesEmailExist(newUser.email);
+
+    if (email) {
+      return res.status(400).json({
+        success: false,
+        message: 'An account with this email already exists',
+      });
     }
-    
+
+    const { error } = userCreateSchema.validate(newUser);
+
+    if (error) {
+      return res.status(400).json({
+        error: 'Validation failed',
+        details: error.details.map((detail) => detail.message),
+      });
+    }
+
     const user = await authService.signUp(newUser);
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: 'User created successfully',
       data: user,
     });
   }
-  
+
   public async signIn(req: Request, res: Response) {}
 
   public async getCurrentUser(req: Request, res: Response) {}
