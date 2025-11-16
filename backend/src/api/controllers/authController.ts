@@ -3,6 +3,8 @@ import { authService } from '../../services/authService';
 import { CreateAuthUserDto } from '../../models/users/CreateAuthUserDto';
 import { HashAuthUserPassword } from '../../utils/hashAuthUserPassword';
 import { userCreateSchema } from '../../validators/userValidator';
+import { BadRequestException } from '../../utils/error';
+import { SignInAuthUserDto } from '../../models/users/SignInAuthUserDto';
 
 class AuthController {
   public async signUp(req: Request, res: Response) {
@@ -16,19 +18,13 @@ class AuthController {
     const email = await authService.doesEmailExist(newUser.email);
 
     if (email) {
-      return res.status(400).json({
-        success: false,
-        message: 'An account with this email already exists',
-      });
+      throw new BadRequestException("An account with this email already exists")
     }
 
     const { error } = userCreateSchema.validate(newUser);
 
     if (error) {
-      return res.status(400).json({
-        error: 'Validation failed',
-        details: error.details.map((detail) => detail.message),
-      });
+      throw new BadRequestException(`Validation Failed: ${error.details.map((detail) => detail.message)}`)
     }
 
     const user = await authService.signUp(newUser);
@@ -40,7 +36,12 @@ class AuthController {
     });
   }
 
-  public async signIn(req: Request, res: Response) {}
+  public async signIn(req: Request, res: Response) {
+    const newUserSignIn: SignInAuthUserDto = {
+      email: req.body.email,
+      password: req.body.password
+    };
+  }
 
   public async getCurrentUser(req: Request, res: Response) {}
 

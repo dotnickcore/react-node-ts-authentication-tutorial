@@ -2,6 +2,9 @@ import { AuthUser } from "../models/users/AuthUser";
 import { CreateAuthUserDto } from "../models/users/CreateAuthUserDto";
 import { AuthRepository } from "../respositories/authRepository";
 import { IAuthRepository } from "../types/IAuthRepository";
+import { IJwtPayload } from "../types/IJwtPayload";
+import { IJwtUserPayload } from "../types/IJwtUserPayload";
+import { jwtUtils } from "../utils/jwt";
 
 class AuthService {
   constructor(private authRepository: IAuthRepository) {}
@@ -17,7 +20,27 @@ class AuthService {
       updated_at: new Date()
     }
 
-    return await this.authRepository.create(newAuthUser);
+    const result = await this.authRepository.create(newAuthUser);
+
+    const newJwtPayload: IJwtPayload = {
+      id: result.id,
+      given_name: result.given_name,
+      surname: result.surname
+    }
+    
+    const token = await jwtUtils.generateToken(newJwtPayload);
+
+    const newJwtUserPayload: IJwtUserPayload = {
+      id: result.id,
+      given_name: result.given_name,
+      surname: result.surname,
+      email: result.email
+    }
+
+    return {
+      accessToken: token,
+      result: newJwtUserPayload
+    }
   }
 
   public async doesEmailExist(email: string) {
