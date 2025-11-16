@@ -47,6 +47,30 @@ class AuthService {
     return await this.authRepository.doesEmailExist(email);
   }
 
+  public async getUserByEmail(email: string) {
+    const result = await this.authRepository.getUserByEmail(email);
+
+    const newJwtPayload: IJwtPayload = {
+      id: result.id,
+      given_name: result.given_name,
+      surname: result.surname
+    }
+
+    const token = await jwtUtils.generateToken(newJwtPayload);
+
+    const newJwtUserPayload: IJwtUserPayload = {
+      id: result.id,
+      given_name: result.given_name,
+      surname: result.surname,
+      email: result.email
+    }
+
+    return {
+      accessToken: token,
+      result: newJwtUserPayload
+    }
+  }
+
   public async signIn(requestBody: any) {}
 }
 

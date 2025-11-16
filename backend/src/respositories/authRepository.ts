@@ -1,9 +1,18 @@
-import { QueryResult } from "pg";
 import pool from "../db";
 import { AuthUser } from "../models/users/AuthUser";
 import { IAuthRepository } from "../types/IAuthRepository";
 
 export class AuthRepository implements IAuthRepository {
+  async getUserByEmail(email: string): Promise<AuthUser> {
+    const result = await pool.query(
+      `SELECT * 
+      FROM users 
+      WHERE email = $1`,
+    [email])
+
+    return AuthUser.fromDatabase(result.rows[0]);
+  }
+
   async doesEmailExist(email: string): Promise<boolean> {
     const result = await pool.query(
       `SELECT email 

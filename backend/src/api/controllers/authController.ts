@@ -5,6 +5,9 @@ import { HashAuthUserPassword } from '../../utils/hashAuthUserPassword';
 import { userCreateSchema } from '../../validators/userValidator';
 import { BadRequestException } from '../../utils/error';
 import { SignInAuthUserDto } from '../../models/users/SignInAuthUserDto';
+import { ComparePasswords } from '../../utils/comparePasswords';
+import { IJwtUserPayload } from '../../types/IJwtUserPayload';
+import HTTP_STATUS from '../../constants/httpConstants';
 
 class AuthController {
   public async signUp(req: Request, res: Response) {
@@ -18,18 +21,20 @@ class AuthController {
     const email = await authService.doesEmailExist(newUser.email);
 
     if (email) {
-      throw new BadRequestException("An account with this email already exists")
+      throw new BadRequestException('An account with this email already exists');
     }
 
     const { error } = userCreateSchema.validate(newUser);
 
     if (error) {
-      throw new BadRequestException(`Validation Failed: ${error.details.map((detail) => detail.message)}`)
+      throw new BadRequestException(
+        `Validation Failed: ${error.details.map((detail) => detail.message)}`
+      );
     }
 
     const user = await authService.signUp(newUser);
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       success: true,
       message: 'User created successfully',
       data: user,
@@ -39,8 +44,26 @@ class AuthController {
   public async signIn(req: Request, res: Response) {
     const newUserSignIn: SignInAuthUserDto = {
       email: req.body.email,
-      password: req.body.password
+      password: req.body.password,
     };
+
+    const user = await authService.getUserByEmail(newUserSignIn.email);
+
+    if (!user) {
+      throw new BadRequestException("Account doesn't exist");
+    }
+
+    const isPasswordAMatch = await ComparePasswords(newUserSignIn.email, user.result.email);
+
+    if (!isPasswordAMatch) {
+      throw new BadRequestException("Account doesn't exist");
+    }
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: 'User successfully signed in',
+      data: user,
+    });
   }
 
   public async getCurrentUser(req: Request, res: Response) {}
